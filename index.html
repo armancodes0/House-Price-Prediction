@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>House Price Prediction using Machine Learning | Amity University Jharkhand</title>
+  <meta name="description" content="Interactive Machine Learning web application evaluating Linear Regression and Decision Tree Regressor for house price estimation. Built around Google Colab project by Amity University Jharkhand.">
+  <meta name="author" content="MD Arman Alam, Nawed Ahmed">
+  <meta name="keywords" content="Machine Learning, House Price Prediction, Supervised Learning, Google Colab, Linear Regression, Decision Tree, Amity University">
+
+  <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="#hero" class="brand-link" id="brandLogoLink">
+        <img src="assets/slide_1_0.png" alt="Amity Logo" class="brand-logo-img" id="headerLogoImg">
+        <div class="brand-title">
+          <span class="brand-name">HousePrice<span class="gradient-text">.ML</span></span>
+          <span class="brand-subtitle">Amity University Jharkhand</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#predictor" class="nav-link">Live Predictor</a></li>
+          <li><a href="#eda" class="nav-link">EDA & Charts</a></li>
+          <li><a href="#workflow" class="nav-link">ML Workflow</a></li>
+          <li><a href="#dataset" class="nav-link">Dataset (2k)</a></li>
+          <li><a href="#presentation" class="nav-link">Slides (10)</a></li>
+          <li><a href="#colab" class="nav-link">Colab Code</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="https://colab.research.google.com/drive/10GfFtzfsD2QnG5EV956oiMoeLkzaBmcG?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn-colab" id="headerColabBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+          <span>Open Colab</span>
+        </a>
+        <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle Navigation">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section" id="hero">
+      <div class="hero-bg">
+        <img src="assets/hero.jpg" alt="Modern Architecture Villa" class="hero-bg-img">
+        <div class="hero-overlay"></div>
+      </div>
+
+      <div class="container hero-content">
+        <div class="hero-badge-wrap">
+          <span class="badge badge-amity">🏛️ Amity University Jharkhand</span>
+          <span class="badge badge-colab">⚡ Supervised Learning in Google Colab</span>
+        </div>
+
+        <h1 class="hero-title">
+          House Price Prediction <br>
+          using <span class="gradient-text">Machine Learning</span>
+        </h1>
+
+        <p class="hero-desc">
+          An interactive machine learning laboratory analyzing 2,000 house records. Compare real-time predictions between 
+          <strong>Linear Regression</strong> and <strong>Decision Tree Regressor</strong>, explore exploratory data analysis charts, 
+          and dive into the supervised learning workflow.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="#predictor" class="btn btn-primary" id="heroPredictorBtn">
+            <span>Launch Live Predictor</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+          <a href="#eda" class="btn btn-secondary" id="heroEdaBtn">
+            <span>Explore EDA & Charts</span>
+          </a>
+          <a href="https://colab.research.google.com/drive/10GfFtzfsD2QnG5EV956oiMoeLkzaBmcG?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" id="heroColabDirectBtn">
+            <span>View Colab Notebook ↗</span>
+          </a>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="hero-stats-grid">
+          <div class="hero-stat-item">
+            <span class="hero-stat-val accent-cyan">2,000</span>
+            <span class="hero-stat-label">Houses in Dataset</span>
+          </div>
+          <div class="hero-stat-item">
+            <span class="hero-stat-val accent-indigo">10</span>
+            <span class="hero-stat-label">Features Extracted</span>
+          </div>
+          <div class="hero-stat-item">
+            <span class="hero-stat-val accent-emerald">2 Models</span>
+            <span class="hero-stat-label">LR & Decision Tree</span>
+          </div>
+          <div class="hero-stat-item">
+            <span class="hero-stat-val accent-amber">80 / 20</span>
+            <span class="hero-stat-label">Train / Test Split</span>
+          </div>
+        </div>
+
+        <!-- Team Strip -->
+        <div class="team-strip">
+          <span class="team-strip-label">Project Team Members</span>
+          <div class="team-members-chips">
+            <div class="team-chip">
+              <span class="team-chip-avatar">AA</span>
+              <span class="team-chip-name">MD Arman Alam</span>
+              <span class="team-chip-roll">A357175125020</span>
+            </div>
+            <div class="team-chip">
+              <span class="team-chip-avatar">NA</span>
+              <span class="team-chip-name">Nawed Ahmed</span>
+              <span class="team-chip-roll">A357175125009</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 1: Live ML Predictor Studio -->
+    <section class="section" id="predictor">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Interactive ML Lab</span>
+          <h2 class="section-title">Live House Price Predictor</h2>
+          <p class="section-desc">
+            Adjust the architectural characteristics below. Both the exact Linear Regression hyperplane 
+            and the 34-level Decision Tree partitioner compute fair market estimates in real time.
+          </p>
+        </div>
+
+        <div class="predictor-studio-grid">
+          <!-- Left Column: Input Features -->
+          <div class="card" id="predictorConfigCard">
+            <div class="card-header">
+              <div class="card-title-group">
+                <div class="card-icon-badge">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="card-title">House Characteristics</h3>
+                  <span class="card-subtitle">Tune parameters or select a pre-built archetype</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Presets Bar -->
+            <div class="presets-bar">
+              <span class="presets-label">Quick Presets:</span>
+              <button class="preset-chip" data-preset="penthouse" id="presetPenthouse">🏙️ Downtown Penthouse</button>
+              <button class="preset-chip" data-preset="suburban" id="presetSuburban">🏡 Suburban Family</button>
+              <button class="preset-chip" data-preset="rural" id="presetRural">🌾 Rural Estate</button>
+              <button class="preset-chip" data-preset="starter" id="presetStarter">🏢 Urban Starter</button>
+            </div>
+
+            <div class="form-grid">
+              <!-- Area -->
+              <div class="form-group form-group-full">
+                <div class="input-label-row">
+                  <label class="input-label" for="areaSlider">
+                    <span>📐 Living Area (Square Feet)</span>
+                  </label>
+                  <span class="input-badge-val" id="areaValDisplay">2,500 sq ft</span>
+                </div>
+                <div class="range-slider-wrap">
+                  <input type="range" id="areaSlider" min="500" max="5000" step="25" value="2500" aria-label="Living Area in Square Feet">
+                  <div class="range-ticks">
+                    <span>500 sq ft</span>
+                    <span>2,500 sq ft</span>
+                    <span>5,000 sq ft</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bedrooms -->
+              <div class="form-group">
+                <div class="input-label-row">
+                  <label class="input-label">🛏️ Bedrooms</label>
+                </div>
+                <div class="segmented-control bedrooms-group">
+                  <button type="button" class="segment-btn" data-val="1">1</button>
+                  <button type="button" class="segment-btn" data-val="2">2</button>
+                  <button type="button" class="segment-btn active" data-val="3">3</button>
+                  <button type="button" class="segment-btn" data-val="4">4</button>
+                  <button type="button" class="segment-btn" data-val="5">5</button>
+                </div>
+              </div>
+
+              <!-- Bathrooms -->
+              <div class="form-group">
+                <div class="input-label-row">
+                  <label class="input-label">🚿 Bathrooms</label>
+                </div>
+                <div class="segmented-control bathrooms-group">
+                  <button type="button" class="segment-btn" data-val="1">1</button>
+                  <button type="button" class="segment-btn active" data-val="2">2</button>
+                  <button type="button" class="segment-btn" data-val="3">3</button>
+                  <button type="button" class="segment-btn" data-val="4">4</button>
+                </div>
+              </div>
+
+              <!-- Floors -->
+              <div class="form-group">
+                <div class="input-label-row">
+                  <label class="input-label">🏢 Floors / Stories</label>
+                </div>
+                <div class="segmented-control floors-group">
+                  <button type="button" class="segment-btn" data-val="1">1 Floor</button>
+                  <button type="button" class="segment-btn active" data-val="2">2 Floors</button>
+                  <button type="button" class="segment-btn" data-val="3">3 Floors</button>
+                </div>
+              </div>
+
+              <!-- Year Built -->
+              <div class="form-group">
+                <div class="input-label-row">
+                  <label class="input-label" for="yearSlider">📅 Year Built</label>
+                  <span class="input-badge-val" id="yearValDisplay">1995 (31 yrs old)</span>
+                </div>
+                <div class="range-slider-wrap">
+                  <input type="range" id="yearSlider" min="1900" max="2023" step="1" value="1995" aria-label="Year Built">
+                  <div class="range-ticks">
+                    <span>1900</span>
+                    <span>1960</span>
+                    <span>2023</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Location -->
+              <div class="form-group form-group-full">
+                <div class="input-label-row">
+                  <label class="input-label">📍 Neighborhood / Location</label>
+                </div>
+                <div class="location-options-grid">
+                  <label class="location-radio-card">
+                    <input type="radio" name="locationRadio" value="Downtown">
+                    <div class="location-card-inner">
+                      <span class="location-card-icon">🏙️</span>
+                      <span class="location-card-title">Downtown</span>
+                    </div>
+                  </label>
+                  <label class="location-radio-card">
+                    <input type="radio" name="locationRadio" value="Suburban" checked>
+                    <div class="location-card-inner">
+                      <span class="location-card-icon">🏡</span>
+                      <span class="location-card-title">Suburban</span>
+                    </div>
+                  </label>
+                  <label class="location-radio-card">
+                    <input type="radio" name="locationRadio" value="Urban">
+                    <div class="location-card-inner">
+                      <span class="location-card-icon">🌆</span>
+                      <span class="location-card-title">Urban</span>
+                    </div>
+                  </label>
+                  <label class="location-radio-card">
+                    <input type="radio" name="locationRadio" value="Rural">
+                    <div class="location-card-inner">
+                      <span class="location-card-icon">🌾</span>
+                      <span class="location-card-title">Rural</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Condition -->
+              <div class="form-group form-group-full">
+                <div class="input-label-row">
+                  <label class="input-label">⭐ Property Condition</label>
+                </div>
+                <div class="condition-options-grid">
+                  <label class="condition-pill">
+                    <input type="radio" name="conditionRadio" value="Poor">
+                    <div class="condition-pill-inner">Poor (Renovate)</div>
+                  </label>
+                  <label class="condition-pill">
+                    <input type="radio" name="conditionRadio" value="Fair">
+                    <div class="condition-pill-inner">Fair (Lived-in)</div>
+                  </label>
+                  <label class="condition-pill">
+                    <input type="radio" name="conditionRadio" value="Good" checked>
+                    <div class="condition-pill-inner">Good (Maintained)</div>
+                  </label>
+                  <label class="condition-pill">
+                    <input type="radio" name="conditionRadio" value="Excellent">
+                    <div class="condition-pill-inner">Excellent (Pristine)</div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Garage -->
+              <div class="form-group form-group-full">
+                <div class="switch-group">
+                  <div class="switch-label-wrap">
+                    <span style="font-size:1.3rem;">🚗</span>
+                    <div>
+                      <div style="font-weight:600; font-size:0.9rem;">Private Garage Included</div>
+                      <div style="font-size:0.75rem; color:var(--text-muted);">Enclosed vehicular storage</div>
+                    </div>
+                  </div>
+                  <label class="switch" for="garageCheckbox">
+                    <input type="checkbox" id="garageCheckbox" checked>
+                    <span class="slider-switch"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Dual Model Predictions -->
+          <div class="predictions-terminal">
+            <!-- Model 1: Linear Regression -->
+            <div class="model-output-card linear" id="lrOutputCard">
+              <div class="model-card-top">
+                <span class="model-tag linear-tag">Model 1 • Linear Regression</span>
+                <span class="model-speed-badge">⚡ 0.2ms Inference</span>
+              </div>
+              <div class="price-display-wrap">
+                <div class="price-number" id="lrPriceDisplay" data-val="521988">$521,988</div>
+              </div>
+              <div class="price-meta">
+                <span>MAE Confidence: ±$243,242</span>
+                <span>•</span>
+                <span>Parametric Fit</span>
+              </div>
+              <div class="model-details-accordion">
+                <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:0.35rem;">Formula calculation:</div>
+                <div class="formula-preview" id="lrFormulaPreview">
+                  y = 278,521 - 0.58(Area) + 76.78(Beds) - 9662(Baths) ...
+                </div>
+              </div>
+            </div>
+
+            <!-- Model 2: Decision Tree Regressor -->
+            <div class="model-output-card tree" id="dtOutputCard">
+              <div class="model-card-top">
+                <span class="model-tag tree-tag">Model 2 • Decision Tree</span>
+                <span class="model-speed-badge">🌲 34 Levels Deep</span>
+              </div>
+              <div class="price-display-wrap">
+                <div class="price-number" id="dtPriceDisplay" data-val="302051">$302,051</div>
+              </div>
+              <div class="price-meta">
+                <span>MAE Confidence: ±$328,973</span>
+                <span>•</span>
+                <span>Discrete Leaf Node</span>
+              </div>
+              <div class="model-details-accordion">
+                <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:0.35rem;">Decision traversal path:</div>
+                <div class="formula-preview" id="treePathPreview">
+                  Path: Area > 2,340 ➔ YearBuilt ≤ 2005 ➔ Leaf
+                </div>
+              </div>
+            </div>
+
+            <!-- Model Variance Box -->
+            <div class="variance-card">
+              <div class="variance-info">
+                <span class="variance-title">Inter-Model Variance</span>
+                <span class="variance-desc">Difference between parametric & tree decisions</span>
+              </div>
+              <span class="variance-val" id="modelVarianceDisplay">Δ $219,937 (42.1%)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Colab Slide 9 Exact Test Set Verification -->
+        <div class="test-samples-verify-wrap">
+          <div class="test-samples-header">
+            <h3 class="test-samples-title">
+              <span>Verified Test Rows from Google Colab</span>
+              <span class="badge-slide9">Exact Slide 9 Match</span>
+            </h3>
+            <span style="font-size:0.8rem; color:var(--text-dim);">Trained on 1,600 rows (80%), evaluated on unseen 400 test rows (20%)</span>
+          </div>
+          <div class="verify-table-container">
+            <table class="verify-table">
+              <thead>
+                <tr>
+                  <th>Test Row</th>
+                  <th>Area</th>
+                  <th>Beds / Baths</th>
+                  <th>Location</th>
+                  <th>Condition</th>
+                  <th>Actual Label</th>
+                  <th>Linear Reg. Pred</th>
+                  <th>Decision Tree Pred</th>
+                  <th style="text-align:right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="sampleVerifyTableBody">
+                <!-- Populated dynamically from MODEL_DATA.sample_predictions -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: EDA Dashboard & Visualizations -->
+    <section class="section section-alt" id="eda">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Exploratory Data Analysis</span>
+          <h2 class="section-title">Visualizing the Data Distributions</h2>
+          <p class="section-desc">
+            Recreating the exact analytical findings from Slides 5, 6, and 9 of the presentation deck.
+            Inspect price frequencies, feature correlations, and regression scatter patterns.
+          </p>
+        </div>
+
+        <!-- EDA Tabs -->
+        <div class="tabs-navigation">
+          <button class="tab-btn active" data-tab="tabPriceDist" id="tabBtnPriceDist">
+            <span>📊 Price Distribution</span>
+          </button>
+          <button class="tab-btn" data-tab="tabAreaScatter" id="tabBtnAreaScatter">
+            <span>📐 Area vs Price</span>
+          </button>
+          <button class="tab-btn" data-tab="tabLocationBox" id="tabBtnLocationBox">
+            <span>📍 Prices by Location</span>
+          </button>
+          <button class="tab-btn" data-tab="tabCorrelation" id="tabBtnCorrelation">
+            <span>🔥 Correlation Heatmap</span>
+          </button>
+          <button class="tab-btn" data-tab="tabActualVsPred" id="tabBtnActualVsPred">
+            <span>🎯 Actual vs Predicted</span>
+          </button>
+        </div>
+
+        <!-- Tab 1: Price Distribution -->
+        <div class="tab-content active" id="tabPriceDist">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div class="chart-title-area">
+                <h3 class="chart-title">Distribution of House Prices</h3>
+                <span class="chart-desc">Slide 5 • Histogram across $50k - $1M with overlayed Gaussian KDE fit</span>
+              </div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="priceDistCanvas"></canvas>
+            </div>
+            <div class="chart-insights-box">
+              <div class="chart-insights-title">💡 Statistical Insights</div>
+              The house prices in this 2,000-record dataset follow a remarkably uniform distribution spanning from $50,005 to $999,719, 
+              with an overall mean of $508,446 and median of $512,185. Unlike real-world skewed markets, this synthetic dataset provides 
+              an even spread across all price brackets.
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Area vs Price -->
+        <div class="tab-content" id="tabAreaScatter">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div class="chart-title-area">
+                <h3 class="chart-title">Area (sq ft) vs House Price</h3>
+                <span class="chart-desc">Slide 5 • Scatter plot across 500 to 5,000 square feet color-coded by location</span>
+              </div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="areaScatterCanvas"></canvas>
+            </div>
+            <div class="chart-insights-box">
+              <div class="chart-insights-title">💡 Statistical Insights</div>
+              Linear regression calculates a slope coefficient of -0.58 for Area. Houses of similar sizes appear across both budget 
+              and luxury price brackets, demonstrating that in this dataset, price is not determined by square footage alone.
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Prices by Location -->
+        <div class="tab-content" id="tabLocationBox">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div class="chart-title-area">
+                <h3 class="chart-title">House Prices by Geographic Location</h3>
+                <span class="chart-desc">Slide 6 • Comparison of Median, Mean, and 75th Percentile across Downtown, Suburban, Urban, and Rural</span>
+              </div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="locationCanvas"></canvas>
+            </div>
+            <div class="chart-insights-box">
+              <div class="chart-insights-title">💡 Statistical Insights</div>
+              Across all four zones (Downtown, Suburban, Urban, Rural), median prices hover closely near $500,000 ($499k - $520k), 
+              indicating that location alone does not create a strong premium without factoring in condition and architectural features.
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Correlation Matrix -->
+        <div class="tab-content" id="tabCorrelation">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div class="chart-title-area">
+                <h3 class="chart-title">Pearson Correlation Matrix Heatmap</h3>
+                <span class="chart-desc">Slide 6 • Linear relationships among numerical features and target price</span>
+              </div>
+            </div>
+            <div class="heatmap-table-wrap" id="correlationHeatmapWrap">
+              <!-- Rendered via JS -->
+            </div>
+            <div class="chart-insights-box">
+              <div class="chart-insights-title">💡 Correlation Interpretation</div>
+              Values close to +1.0 indicate strong positive linear relationships, while values near -1.0 indicate negative relationships. 
+              The numerical columns show mild cross-correlations ranging from -0.03 to +0.06, providing an interesting challenge for linear regression!
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 5: Actual vs Predicted -->
+        <div class="tab-content" id="tabActualVsPred">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div class="chart-title-area">
+                <h3 class="chart-title">Actual vs Predicted Price (Test Set)</h3>
+                <span class="chart-desc">Slide 9 • 400 unseen test houses plotted against ideal y = x line</span>
+              </div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="actualVsPredCanvas"></canvas>
+            </div>
+            <div class="chart-insights-box">
+              <div class="chart-insights-title">💡 Model Behavior Comparison</div>
+              Notice how <strong>Linear Regression</strong> (purple) clusters around the sample mean (~$500k-$550k) minimizing squared errors, 
+              whereas <strong>Decision Tree Regressor</strong> (orange) creates discrete, dispersed point predictions across the full gamut 
+              of possible values.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: ML Workflow & Algorithm Deep Dive -->
+    <section class="section" id="workflow">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Methodology & Architecture</span>
+          <h2 class="section-title">The Machine Learning Workflow</h2>
+          <p class="section-desc">
+            Slide 7 & 8 • Following the standard end-to-end supervised learning methodology from raw data to evaluation.
+          </p>
+        </div>
+
+        <!-- 6 Step Stepper -->
+        <div class="pipeline-stepper">
+          <div class="pipeline-step-card">
+            <div class="pipeline-step-num">1</div>
+            <h4 class="pipeline-step-title">Load Data</h4>
+            <p class="pipeline-step-desc">2,000 CSV house records imported with pandas.</p>
+          </div>
+          <div class="pipeline-step-card">
+            <div class="pipeline-step-num">2</div>
+            <h4 class="pipeline-step-title">Explore</h4>
+            <p class="pipeline-step-desc">Statistical summary, histograms, and correlation.</p>
+          </div>
+          <div class="pipeline-step-card">
+            <div class="pipeline-step-num">3</div>
+            <h4 class="pipeline-step-title">Prepare</h4>
+            <p class="pipeline-step-desc">Drop Id column and apply pd.get_dummies() encoding.</p>
+          </div>
+          <div class="pipeline-step-card">
+            <div class="pipeline-step-num">4</div>
+            <h4 class="pipeline-step-title">Split</h4>
+            <p class="pipeline-step-desc">80% Train (1,600) and 20% Test (400) with random_state=42.</p>
+          </div>
+          <div class="pipeline-step-card">
+            <div class="pipeline-step-num">5</div>
+            <h4 class="pipeline-step-title">Train</h4>
+            <p class="pipeline-step-desc">Fit Linear Regression and Decision Tree models.</p>
+          </div>
+          <div class="pipeline-step-card">
+            <div class="pipeline-step-num">6</div>
+            <h4 class="pipeline-step-title">Predict</h4>
+            <p class="pipeline-step-desc">Infer unseen prices and calculate MAE and RMSE metrics.</p>
+          </div>
+        </div>
+
+        <!-- Models Deep Dive Cards -->
+        <div class="models-deepdive-grid">
+          <div class="model-deepdive-card linear">
+            <h3 class="model-deepdive-title">Linear Regression</h3>
+            <span class="model-deepdive-idea">Features ➔ Learned Coefficients ➔ Predicted Price</span>
+            <p class="model-deepdive-desc">
+              Finds an optimal hyperplane by minimizing the sum of squared residuals between actual prices and predictions.
+              Highly transparent and directly interpretable through its learned weight coefficients.
+            </p>
+            <ul class="model-specs-list">
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span><strong>Mathematical formulation:</strong> y = β₀ + β₁x₁ + ... + βₙxₙ</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span><strong>Baseline Intercept:</strong> $278,521 USD</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span><strong>Strengths:</strong> Fast, no hyperparameter tuning, stable extrapolation</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="model-deepdive-card tree">
+            <h3 class="model-deepdive-title">Decision Tree Regressor</h3>
+            <span class="model-deepdive-idea" style="background:rgba(16,185,129,0.1); color:#34d399;">Question ➔ Branch ➔ Branch ➔ Predicted Price</span>
+            <p class="model-deepdive-desc">
+              Recursively segments the feature space into rectangular subsets using binary thresholds to minimize variance (MSE) 
+              within each leaf. Captures non-linear feature interactions without feature scaling.
+            </p>
+            <ul class="model-specs-list">
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span><strong>Tree Structure:</strong> 3,199 total nodes with 34 maximum depth levels</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span><strong>Splitting Criterion:</strong> Mean Squared Error (MSE) reduction</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span><strong>Trade-off:</strong> Highly adaptive, prone to variance on unseen test splits</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Metrics Comparison Scorecard -->
+        <div class="metrics-table-card">
+          <table class="metrics-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Mean Absolute Error (MAE)</th>
+                <th>Root Mean Squared Error (RMSE)</th>
+                <th>R² Score</th>
+                <th>Interpretability</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Linear Regression</strong></td>
+                <td><span class="metric-score" style="color:#818cf8;">$243,242</span></td>
+                <td><span class="metric-score">$279,860</span></td>
+                <td><span class="metric-score" style="color:#f59e0b;">-0.0067</span></td>
+                <td>High (Direct feature coefficients)</td>
+              </tr>
+              <tr>
+                <td><strong>Decision Tree Regressor</strong></td>
+                <td><span class="metric-score" style="color:#34d399;">$328,973</span></td>
+                <td><span class="metric-score">$401,354</span></td>
+                <td><span class="metric-score" style="color:#ef4444;">-1.0705</span></td>
+                <td>Moderate (Hierarchical decision rules)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Dataset Explorer (2,000 Records) -->
+    <section class="section section-alt" id="dataset">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Data Browser</span>
+          <h2 class="section-title">2,000 House Records Explorer</h2>
+          <p class="section-desc">
+            Search, filter, and inspect the raw dataset. Click any row's <strong>"⚡ Test in ML"</strong> button 
+            to immediately feed its parameters into the real-time prediction engine!
+          </p>
+        </div>
+
+        <!-- Explorer Controls -->
+        <div class="explorer-controls">
+          <div class="search-input-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="tableSearchInput" class="search-input" placeholder="Search by ID, Area, Location, or Price..." aria-label="Search dataset">
+          </div>
+
+          <div class="filters-group">
+            <select id="filterLocation" class="filter-select" aria-label="Filter by Location">
+              <option value="all">All Locations</option>
+              <option value="Downtown">Downtown</option>
+              <option value="Suburban">Suburban</option>
+              <option value="Urban">Urban</option>
+              <option value="Rural">Rural</option>
+            </select>
+
+            <select id="filterCondition" class="filter-select" aria-label="Filter by Condition">
+              <option value="all">All Conditions</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Fair">Fair</option>
+              <option value="Poor">Poor</option>
+            </select>
+
+            <select id="filterGarage" class="filter-select" aria-label="Filter by Garage">
+              <option value="all">All Garages</option>
+              <option value="Yes">With Garage (Yes)</option>
+              <option value="No">No Garage (No)</option>
+            </select>
+
+            <button class="btn btn-secondary" id="btnExportCSV" style="padding: 0.55rem 1rem; font-size:0.82rem;">
+              📥 Export CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Dataset Table -->
+        <div class="dataset-table-card">
+          <div class="dataset-table-scroll">
+            <table class="dataset-table">
+              <thead>
+                <tr>
+                  <th data-col="Id">ID ⇅</th>
+                  <th data-col="Area">Area ⇅</th>
+                  <th data-col="Bedrooms">Beds ⇅</th>
+                  <th data-col="Bathrooms">Baths ⇅</th>
+                  <th data-col="Floors">Floors ⇅</th>
+                  <th data-col="YearBuilt">Year ⇅</th>
+                  <th data-col="Location">Location ⇅</th>
+                  <th data-col="Condition">Condition ⇅</th>
+                  <th data-col="Garage">Garage ⇅</th>
+                  <th data-col="Price">Price (USD) ⇅</th>
+                  <th style="text-align:right;">Test in ML</th>
+                </tr>
+              </thead>
+              <tbody id="datasetTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Table Footer & Pagination -->
+          <div class="table-footer">
+            <span style="font-size:0.85rem; color:var(--text-muted);" id="tableCountDisplay">
+              Showing 1 - 20 of 2,000 houses
+            </span>
+            <div class="pagination-controls">
+              <select id="pageSizeSelect" class="filter-select" style="padding:0.35rem 1.6rem 0.35rem 0.65rem; font-size:0.78rem;" aria-label="Rows per page">
+                <option value="20">20 per page</option>
+                <option value="50">50 per page</option>
+                <option value="100">100 per page</option>
+              </select>
+              <button class="page-btn" id="prevPageBtn" disabled>‹ Prev</button>
+              <span style="font-size:0.82rem; font-family:var(--font-mono); color:var(--text-muted);">
+                Page <span id="currentPageDisplay" style="color:#fff; font-weight:700;">1</span> of <span id="totalPagesDisplay">100</span>
+              </span>
+              <button class="page-btn" id="nextPageBtn">Next ›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Presentation Slide Deck Viewer (10 Slides) -->
+    <section class="section" id="presentation">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Presentation Slides</span>
+          <h2 class="section-title">Colab Presentation Deck (10 Slides)</h2>
+          <p class="section-desc">
+            Browse through the 10-slide academic deck presented for Amity University Jharkhand. 
+            Use the on-screen buttons or your keyboard arrow keys (‹ / ›) to flip slides.
+          </p>
+        </div>
+
+        <div class="slides-viewer-card">
+          <div class="slide-nav-meta">
+            <span class="slide-counter" id="slideCounterDisplay">Slide 1 of 10</span>
+            <span style="font-size:0.8rem; color:var(--text-dim);">Navigate with Arrow Keys or Click Below</span>
+          </div>
+
+          <!-- Slide Stage -->
+          <div class="slide-display-stage">
+            <button class="slide-stage-nav-btn slide-prev" id="prevSlideBtn" aria-label="Previous Slide">‹</button>
+            <div class="slide-content-canvas" id="slideContentCanvas">
+              <!-- Rendered via JS -->
+            </div>
+            <button class="slide-stage-nav-btn slide-next" id="nextSlideBtn" aria-label="Next Slide">›</button>
+          </div>
+
+          <!-- Thumbnails Strip -->
+          <div class="slide-thumbnails-strip" id="slideThumbsStrip">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Colab Notebook & Code Guide -->
+    <section class="section section-alt" id="colab">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Google Colab Hub</span>
+          <h2 class="section-title">Reproduce in Google Colab</h2>
+          <p class="section-desc">
+            Direct access to the Python code powering this machine learning project. 
+            Launch the notebook or copy code blocks directly into your environment.
+          </p>
+        </div>
+
+        <div style="text-align:center; margin-bottom:2.5rem;">
+          <a href="https://colab.research.google.com/drive/10GfFtzfsD2QnG5EV956oiMoeLkzaBmcG?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding: 0.95rem 2.2rem; font-size:1.05rem;" id="mainColabLinkBtn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+            <span>Launch Notebook in Google Colab ↗</span>
+          </a>
+        </div>
+
+        <!-- Code Block 1: Training Script -->
+        <div class="code-tabs-wrap">
+          <div class="code-tabs-header">
+            <div class="code-window-dots">
+              <span class="code-dot red"></span>
+              <span class="code-dot yellow"></span>
+              <span class="code-dot green"></span>
+            </div>
+            <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-dim);">house_price_prediction.py</span>
+            <button class="btn-copy-code" id="btnCopyCode">
+              <span>📋 Copy Code</span>
+            </button>
+          </div>
+          <pre class="code-block"><code><span class="code-com"># House Price Prediction using Machine Learning</span>
+<span class="code-com"># Supervised Learning Project in Google Colab</span>
+<span class="code-com"># Team: MD Arman Alam, Nawed Ahmed (Amity University Jharkhand)</span>
+
+<span class="code-kw">import</span> pandas <span class="code-kw">as</span> pd
+<span class="code-kw">from</span> sklearn.model_selection <span class="code-kw">import</span> train_test_split
+<span class="code-kw">from</span> sklearn.linear_model <span class="code-kw">import</span> LinearRegression
+<span class="code-kw">from</span> sklearn.tree <span class="code-kw">import</span> DecisionTreeRegressor
+<span class="code-kw">from</span> sklearn.metrics <span class="code-kw">import</span> mean_absolute_error, mean_squared_error, r2_score
+
+<span class="code-com"># Step 1: Load Dataset</span>
+df = pd.<span class="code-fn">read_csv</span>(<span class="code-str">'house_prices.csv'</span>)
+
+<span class="code-com"># Step 2: Prepare Features (drop identifier 'Id' and encode categorical columns)</span>
+features_df = df.<span class="code-fn">drop</span>(<span class="code-str">'Id'</span>, axis=<span class="code-num">1</span>)
+df_encoded = pd.<span class="code-fn">get_dummies</span>(features_df, drop_first=<span class="code-kw">True</span>)
+
+X = df_encoded.<span class="code-fn">drop</span>(<span class="code-str">'Price'</span>, axis=<span class="code-num">1</span>)
+y = df_encoded[<span class="code-str">'Price'</span>]
+
+<span class="code-com"># Step 3: 80% Train / 20% Test Split</span>
+X_train, X_test, y_train, y_test = <span class="code-fn">train_test_split</span>(X, y, test_size=<span class="code-num">0.2</span>, random_state=<span class="code-num">42</span>)
+
+<span class="code-com"># Step 4: Train Linear Regression Model</span>
+lr_model = <span class="code-fn">LinearRegression</span>()
+lr_model.<span class="code-fn">fit</span>(X_train, y_train)
+lr_preds = lr_model.<span class="code-fn">predict</span>(X_test)
+
+<span class="code-com"># Step 5: Train Decision Tree Regressor</span>
+dt_model = <span class="code-fn">DecisionTreeRegressor</span>(random_state=<span class="code-num">42</span>)
+dt_model.<span class="code-fn">fit</span>(X_train, y_train)
+dt_preds = dt_model.<span class="code-fn">predict</span>(X_test)
+
+<span class="code-com"># Step 6: Evaluate Model Performance</span>
+<span class="code-fn">print</span>(<span class="code-str">"Linear Regression MAE:"</span>, <span class="code-fn">mean_absolute_error</span>(y_test, lr_preds))
+<span class="code-fn">print</span>(<span class="code-str">"Decision Tree MAE:"</span>, <span class="code-fn">mean_absolute_error</span>(y_test, dt_preds))</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-link">
+            <img src="assets/slide_1_0.png" alt="Amity Logo" class="brand-logo-img">
+            <div class="brand-title">
+              <span class="brand-name">HousePrice<span class="gradient-text">.ML</span></span>
+              <span class="brand-subtitle">Amity University Jharkhand</span>
+            </div>
+          </div>
+          <p class="footer-desc">
+            A supervised machine learning project demonstrating end-to-end regression pipelines, 
+            exploratory data analysis, and predictive modeling in Python & Google Colab.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Project Team</h4>
+          <ul class="footer-links-list">
+            <li><strong>MD Arman Alam</strong> <span style="font-family:var(--font-mono); color:var(--text-dim);">(A357175125020)</span></li>
+            <li><strong>Nawed Ahmed</strong> <span style="font-family:var(--font-mono); color:var(--text-dim);">(A357175125009)</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Quick Navigation</h4>
+          <ul class="footer-links-list">
+            <li><a href="#predictor">Live ML Predictor</a></li>
+            <li><a href="#eda">EDA Visualizations</a></li>
+            <li><a href="#workflow">ML Pipeline & Models</a></li>
+            <li><a href="#dataset">2,000 Records Explorer</a></li>
+            <li><a href="#presentation">10 Slides Presentation</a></li>
+            <li><a href="https://colab.research.google.com/drive/10GfFtzfsD2QnG5EV956oiMoeLkzaBmcG?usp=sharing" target="_blank" rel="noopener">Google Colab Notebook ↗</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 Amity University Jharkhand • Department of Computer Science & Engineering</div>
+        <div>Built for House Price Prediction ML Research Project</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <!-- Chart.js: Local bundled fallback + CDN fallback -->
+  <script src="assets/chart.min.js"></script>
+  <script>
+    if (typeof Chart === 'undefined') {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>');
+    }
+  </script>
+
+  <!-- Dataset & Model Parameters -->
+  <script src="js/data.js"></script>
+
+  <!-- Application Modules -->
+  <script src="js/predictor.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/table.js"></script>
+  <script src="js/slides.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
